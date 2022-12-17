@@ -4,6 +4,12 @@ interface IProps {
     name?: string;
     label?: string;
     minuteStep?: number;
+    disabledTimes?: IDisabletime[]
+}
+
+interface IDisabletime {
+    startTime: string;
+    endTime: string;
 }
 interface IHour {
     hour: string;
@@ -14,12 +20,12 @@ interface IMinute {
     value: number;
 }
 
-const TimePicker = ({ name = 'time', label = 'Time' , minuteStep=1}: IProps) => {
+const TimePicker = ({ name = 'time', label = 'Time' , minuteStep=1, disabledTimes}: IProps) => {
     const generateHours = function (): IHour[] {
 
         const hours: IHour[] = [];
 
-        for (let i = 0; i <= 24; i++) {
+        for (let i = 0; i < 24; i++) {
             let zero = ''
             if (i <= 9) {
                 zero = '0'
@@ -43,8 +49,22 @@ const TimePicker = ({ name = 'time', label = 'Time' , minuteStep=1}: IProps) => 
 
         return minutes;
     }
+    const genetateDisabledTimesSet = () => {
+        let disabledTimesSet = new Set();
+        disabledTimes?.forEach(d => {
+            let startTime = (parseInt(d.startTime.slice(0,2)) * 60) + (parseInt(d.startTime.slice(3)))
+            let endTime = (parseInt(d.endTime.slice(0,2)) * 60) + (parseInt(d.endTime.slice(3)))
+
+            for(let i=startTime; i<=endTime; i++) {
+                disabledTimesSet.add(i);
+            }
+        })
+        return disabledTimesSet;
+    }
+
     const hours = generateHours();
     const minutes = generateMunites(minuteStep);
+    const disabledTimesSet = genetateDisabledTimesSet();
     const [hour, setHour] = useState<number>(new Date().getHours());
     const [minute, setMinute] = useState<number>(new Date().getMinutes());
     return (
@@ -59,7 +79,10 @@ const TimePicker = ({ name = 'time', label = 'Time' , minuteStep=1}: IProps) => 
             </div>
             <div className='time-section'>
                 {minutes.map((item) => (
-                    <span className={minute===item.value ? 'hourActive' : 'hour'}
+                    // <span className={minute===item.value ? 'hourActive' : 'hour'}
+                    <span className={disabledTimesSet.has((hour*60)+item.value) ? 'time-disabled' 
+                            : minute===item.value ? 'hourActive' : 'hour' 
+                        }
                         key={item.value}
                         onClick={() => setMinute(item.value)}
                     >{item.munite}</span>

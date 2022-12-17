@@ -35,3 +35,9 @@ body {
   background-color: #358cef;
   color: whitesmoke
 }
+
+.time-disabled {
+    cursor:default;
+    background-color: #ccc;
+    color: #353434;
+}
