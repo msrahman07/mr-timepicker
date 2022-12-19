@@ -10,6 +10,20 @@ body {
 .time {
   display: flex;
   flex-direction: row;
+  background-color: white;
+  z-index:1000;
+  margin-top: 30px;
+  position: absolute;
+}
+
+.timepicker-btn {
+  background-color: #d9e5e5;
+  border: none;
+  border-radius: 2px;
+  padding: 8px;
+  margin: 5px 0;
+  cursor: pointer;
+  max-width: fit-content;
 }
 
 .time-section {
